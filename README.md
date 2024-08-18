@@ -27,8 +27,8 @@ This bot is designed to automate the distribution of SOL to multiple wallets and
 #  🚀 Usage
 ### 1. Clone the repository
 ```
-git clone https://github.com/skeleton1009/Raydium-Volume-Bot-Updated.git
-cd Raydium-Volume-Bot-V2
+git clone https://github.com/skeleton1009/Raydium-volume-bot-updated.git
+cd Raydium-volume-bot-updated
 ```
 ### 2. Install dependencies
 ```
