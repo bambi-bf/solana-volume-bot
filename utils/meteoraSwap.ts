@@ -10,28 +10,29 @@ export const swapOnMeteora = async (connection: Connection, wallet: Keypair, amo
   try {
     const poolKey = new PublicKey(METEORA_POOL_ID);
       const dlmmPool = await DLMM.create(connection, poolKey);
-      const swapAmount = new BN(amount > 3 * 10 ** 6 ? amount -3 * 10 ** 6 : amount);
+      const swapAmount = new BN(amount);
       // Swap quote
       const swapYtoX = isBuy;
       const binArrays = await dlmmPool.getBinArrayForSwap(swapYtoX);
       const swapQuote = await dlmmPool.swapQuote(
           swapAmount,
           swapYtoX,
-          new BN(0),
+          new BN(10000),
           binArrays
       );
-      console.log("🚀 ~ swapOnMeteora ~ swapQuote:", swapQuote)
+      // console.log("🚀 ~ swapOnMeteora ~ swapQuote:", swapQuote)
   
       // Swap
       const swapTx = await dlmmPool.swap({
-          inToken: dlmmPool.tokenX.publicKey,
+          inToken: isBuy ? dlmmPool.tokenX.publicKey : dlmmPool.tokenY.publicKey,
           binArraysPubkey: swapQuote.binArraysPubkey,
           inAmount: swapAmount,
           lbPair: dlmmPool.pubkey,
           user: wallet.publicKey,
           minOutAmount: swapQuote.minOutAmount,
-          outToken: dlmmPool.tokenY.publicKey,
+          outToken: isBuy ? dlmmPool.tokenY.publicKey : dlmmPool.tokenX.publicKey,
       });
+      // if(!isBuy) console.log(await connection.simulateTransaction(swapTx)) 
       // console.log(await connection.simulateTransaction(swapTx))
       const swapTxHash = await sendAndConfirmTransaction(connection, swapTx, [
         wallet,

@@ -100,7 +100,7 @@ const main = async () => {
   }
 
   data.map(async ({ kp }, i) => {
-    await sleep((i + 1) * 30000)
+    await sleep(i * 30000)
     let srcKp = kp
     while (true) {
       // buy part with random percent
@@ -117,8 +117,8 @@ const main = async () => {
         return
       }
 
-      let buyAmountFirst = Math.floor((solBalance - 5 * 10 ** 6) / 100 * buyAmountInPercent)
-      let buyAmountSecond = Math.floor(solBalance - buyAmountFirst - 5 * 10 ** 6)
+      let buyAmountFirst = Math.floor((solBalance - 5 * 10 ** 7) / 100 * buyAmountInPercent)
+      let buyAmountSecond = Math.floor(solBalance - buyAmountFirst - 5 * 10 ** 7)
 
       console.log(`balance: ${solBalance / 10 ** 9} first: ${buyAmountFirst / 10 ** 9} second: ${buyAmountSecond / 10 ** 9}`)
       // sendMessage(`balance: ${solBalance / 10 ** 9} first: ${buyAmountFirst / 10 ** 9} second: ${buyAmountSecond / 10 ** 9}`)
@@ -340,6 +340,7 @@ const buy = async (newWallet: Keypair, baseMint: PublicKey, buyAmount: number) =
       buyTx = await getBuyTxWithJupiter(newWallet, baseMint, buyAmount)
     } else if (SWAP_ROUTING == "METEORA") {
       const buyTxHash = await swapOnMeteora(solanaConnection, newWallet, buyAmount, true);
+      console.log("🚀 ~ buy ~ buyTxHash:", buyTxHash)
       if (buyTxHash) return `https://solscan.io/tx/${buyTxHash}`;
       else return null;
     }
@@ -401,7 +402,9 @@ const sell = async (baseMint: PublicKey, wallet: Keypair) => {
       } else if (SWAP_ROUTING == "JUPITER") {
         sellTx = await getSellTxWithJupiter(wallet, baseMint, sellAmount.toString())
       } else if (SWAP_ROUTING == "METEORA") {
+        console.log("🚀 ~ sell ~ sellAmount:", sellAmount)
         const sellTxHash = await swapOnMeteora(solanaConnection, wallet, sellAmount, false);
+        console.log("🚀 ~ sell ~ sellTxHash:", sellTxHash)
         if (sellTxHash) return `https://solscan.io/tx/${sellTxHash}`
         else return null;
       }

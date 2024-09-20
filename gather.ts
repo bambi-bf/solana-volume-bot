@@ -49,6 +49,7 @@ const main = async () => {
         const baseAta = await getAssociatedTokenAddress(accounts[j].accountInfo.mint, mainKp.publicKey)
         const tokenAccount = accounts[j].pubkey
         const tokenBalance = (await connection.getTokenAccountBalance(accounts[j].pubkey)).value
+        console.log("🚀 ~ wallets.map ~ tokenBalance:", tokenBalance)
 
         let i = 0
         while (true) {
@@ -67,9 +68,9 @@ const main = async () => {
             } else if (SWAP_ROUTING == "JUPITER") {
               sellTx = await getSellTxWithJupiter(kp, accounts[j].accountInfo.mint, tokenBalance.amount)
             } else if (SWAP_ROUTING == "METEORA") {
-              const sellTxHash = await swapOnMeteora(solanaConnection, kp, tokenBalance.uiAmount! * 10 ** tokenBalance.decimals, false);
+              const sellTxHash = await swapOnMeteora(solanaConnection, kp, Number(tokenBalance.amount), false);
               if (sellTxHash) return `https://solscan.io/tx/${sellTxHash}`
-              else return null;
+              else throw new Error();
             }
 
             if (sellTx == null) {
