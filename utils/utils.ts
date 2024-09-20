@@ -1,6 +1,7 @@
 import { Logger } from 'pino';
 import dotenv from 'dotenv';
 import fs from 'fs';
+import { sendMessage } from './tgNotification';
 
 dotenv.config();
 
@@ -8,11 +9,11 @@ export const retrieveEnvVariable = (variableName: string, logger: Logger) => {
   const variable = process.env[variableName] || '';
   if (!variable) {
     console.log(`${variableName} is not set`);
+    // sendMessage(`${variableName} is not set`)
     process.exit(1);
   }
   return variable;
 };
-
 
 // Define the type for the JSON file content
 export interface Data {
@@ -106,7 +107,7 @@ export function writeJson( data: Data[], filename: string = "data.json",): void 
 // Function to edit JSON file content
 export function editJson(newData: Partial<Data>, filename: string = "data.json"): void {
   if(!newData.pubkey) {
-    console.log("Pubkey is not prvided as an argument")
+    console.log("Pubkey is not provided as an argument")
     return
   }
   const wallets = readJson(filename);

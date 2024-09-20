@@ -1,15 +1,17 @@
 import base58 from "bs58"
 import { logger, readJson, retrieveEnvVariable, sleep } from "./utils"
-import { ComputeBudgetProgram, Connection, Keypair, SystemProgram, Transaction, TransactionInstruction, sendAndConfirmTransaction } from "@solana/web3.js"
+import { ComputeBudgetProgram, Connection, Keypair, PublicKey, SystemProgram, Transaction, TransactionInstruction, sendAndConfirmTransaction } from "@solana/web3.js"
 import { TOKEN_PROGRAM_ID, createAssociatedTokenAccountIdempotentInstruction, createCloseAccountInstruction, createTransferCheckedInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import { SPL_ACCOUNT_LAYOUT, TokenAccount } from "@raydium-io/raydium-sdk";
-import { getSellTxWithJupiter } from "./utils/swapOnlyAmm";
+import { getSellTx, getSellTxWithJupiter } from "./utils/swapOnlyAmm";
 import { execute } from "./executor/legacy";
-import { RPC_ENDPOINT, RPC_WEBSOCKET_ENDPOINT } from "./constants";
+import { POOL_ID, RPC_ENDPOINT, RPC_WEBSOCKET_ENDPOINT, SWAP_ROUTING } from "./constants";
 
 export const solanaConnection = new Connection(RPC_ENDPOINT, {
   wsEndpoint: RPC_WEBSOCKET_ENDPOINT, commitment: "processed"
 })
+
+const quoteMint = new PublicKey("So11111111111111111111111111111111111111112")
 
 const rpcUrl = retrieveEnvVariable("RPC_ENDPOINT", logger);
 const mainKpStr = retrieveEnvVariable('PRIVATE_KEY', logger);
@@ -49,7 +51,7 @@ const main = async () => {
 
         let i = 0
         while (true) {
-          if (i > 10) {
+          if (i > 1) {
             console.log("Sell error before gather")
             break
           }
@@ -57,7 +59,14 @@ const main = async () => {
             break
           }
           try {
-            const sellTx = await getSellTxWithJupiter(kp, accounts[j].accountInfo.mint, tokenBalance.amount)
+            
+            let sellTx
+            if (SWAP_ROUTING == "RAYDIUM") {
+              sellTx = await getSellTx(solanaConnection, kp, accounts[j].accountInfo.mint, quoteMint, tokenBalance.uiAmount! * 10 ** tokenBalance.decimals, POOL_ID)
+            } else {
+              sellTx = await getSellTxWithJupiter(kp, accounts[j].accountInfo.mint, tokenBalance.amount)
+            }
+
             if (sellTx == null) {
               // console.log(`Error getting sell transaction`)
               throw new Error("Error getting sell tx")

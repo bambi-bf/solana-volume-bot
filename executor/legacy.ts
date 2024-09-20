@@ -1,6 +1,7 @@
 import { Connection, VersionedTransaction } from "@solana/web3.js";
-import { RPC_ENDPOINT, RPC_WEBSOCKET_ENDPOINT } from "../constants";
+import { RPC_ENDPOINT, RPC_WEBSOCKET_ENDPOINT, TOKEN_MINT, TOKEN_NAME } from "../constants";
 import { logger } from "../utils";
+// import { sendMessage } from "../utils/tgNotification";
 
 
 interface Blockhash {
@@ -26,12 +27,15 @@ export const execute = async (transaction: VersionedTransaction, latestBlockhash
     console.log("Confirmtaion error")
     return ""
   } else {
-    if(isBuy === 1){
+    if (isBuy === 1) {
       return signature
-    } else if (isBuy)
+    } else if (isBuy) {
       console.log(`Success in buy transaction: https://solscan.io/tx/${signature}`)
-    else
+    }
+    else {
       console.log(`Success in Sell transaction: https://solscan.io/tx/${signature}`)
+      // sendMessage(`Success in Sell transaction: https://solscan.io/tx/${signature}`)
+    }
   }
   return signature
 }
