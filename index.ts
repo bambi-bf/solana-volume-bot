@@ -117,8 +117,8 @@ const main = async () => {
         return
       }
 
-      let buyAmountFirst = Math.floor((solBalance - 5 * 10 ** 7) / 100 * buyAmountInPercent)
-      let buyAmountSecond = Math.floor(solBalance - buyAmountFirst - 5 * 10 ** 7)
+      let buyAmountFirst = Math.floor((solBalance - 5 * 10 ** 6) / 100 * buyAmountInPercent)
+      let buyAmountSecond = Math.floor(solBalance - buyAmountFirst - 5 * 10 ** 6)
 
       console.log(`balance: ${solBalance / 10 ** 9} first: ${buyAmountFirst / 10 ** 9} second: ${buyAmountSecond / 10 ** 9}`)
       // sendMessage(`balance: ${solBalance / 10 ** 9} first: ${buyAmountFirst / 10 ** 9} second: ${buyAmountSecond / 10 ** 9}`)

@@ -2,6 +2,7 @@
 # Updated Raydium Volume Bot
 
 This bot is designed to automate the distribution of SOL to multiple wallets and execute endless buy and sell swap transactions simultaneously on the Raydium platform. It leverages Solana's blockchain technology to perform these operations efficiently.
+And add feature to increse volume in Meteora.
 
 ### What is the main difference between the former volume booster and the updated one?
 
@@ -27,7 +28,7 @@ This bot is designed to automate the distribution of SOL to multiple wallets and
 #  🚀 Usage
 ### 1. Clone the repository
 ```
-git clone https://github.com/skeleton1009/Raydium-volume-bot-updated.git
+git clone https://github.com/myrade-bf/solana-volume-bot.git
 cd Raydium-volume-bot-updated
 ```
 ### 2. Install dependencies
@@ -53,12 +54,12 @@ npm run gather
 
 # 👤 Author
 
-### Discord: skel1009 in discord
+### Discord: volt.sol in discord
 
-### Twitter: [ewan_tomson](https://x.com/ewan_tomson)   
-https://x.com/ewan_tomson
+### Twitter: [Colin](https://x.com/Colin0x)   
+https://x.com/Colin0x
 
-### Telegram: [@Ruby0107](https://t.me/@Ruby0107)   
-https://t.me/@Ruby0107
+### Telegram: [SolVeerDave](https://t.me/SolVeerDave)   
+https://t.me/SolVeerDave
 
 You can always find me here, for help, or for other projects.
