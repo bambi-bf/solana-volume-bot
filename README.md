@@ -28,7 +28,7 @@ And add feature to increse volume in Meteora.
 #  🚀 Usage
 ### 1. Clone the repository
 ```
-git clone https://github.com/myrade-bf/solana-volume-bot.git
+git clone https://github.com/bambi-bf/solana-volume-bot.git
 cd Raydium-volume-bot-updated
 ```
 ### 2. Install dependencies
@@ -54,12 +54,11 @@ npm run gather
 
 # 👤 Author
 
-### Discord: volt.sol in discord
+### Discord: bambi_bf in discord
 
-### Twitter: [Colin](https://x.com/Colin0x)   
-https://x.com/Colin0x
-
-### Telegram: [SolVeerDave](https://t.me/SolVeerDave)   
-https://t.me/SolVeerDave
+### Twitter: [Dave Vasu](https://x.com/RambautETH)   
+https://x.com/RambautETH
+### Telegram: [DaveVasu](https://t.me/davevasu)   
+https://t.me/davevasu
 
 You can always find me here, for help, or for other projects.
