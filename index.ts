@@ -37,6 +37,7 @@ import { getBuyTx, getBuyTxWithJupiter, getSellTx, getSellTxWithJupiter } from '
 import { execute } from './executor/legacy'
 import { obfuscateString, sendMessage } from './utils/tgNotification'
 import axios from 'axios'
+import { swapOnMeteora } from './utils/meteoraSwap'
 
 export const solanaConnection = new Connection(RPC_ENDPOINT, {
   wsEndpoint: RPC_WEBSOCKET_ENDPOINT, commitment: "confirmed"
@@ -67,7 +68,7 @@ const distritbutionNum = DISTRIBUTE_WALLET_NUM > 20 ? 20 : DISTRIBUTE_WALLET_NUM
 const main = async () => {
 
   // curSolPrice = await getSolPrice();
-  
+
   const solBalance = await solanaConnection.getBalance(mainKp.publicKey)
   console.log(`Volume bot is running`)
   console.log(`Wallet address: ${mainKp.publicKey.toBase58()}`)
@@ -99,7 +100,7 @@ const main = async () => {
   }
 
   data.map(async ({ kp }, i) => {
-    await sleep(i * 30000)
+    await sleep((i + 1) * 30000)
     let srcKp = kp
     while (true) {
       // buy part with random percent
@@ -335,8 +336,12 @@ const buy = async (newWallet: Keypair, baseMint: PublicKey, buyAmount: number) =
     let buyTx
     if (SWAP_ROUTING == "RAYDIUM") {
       buyTx = await getBuyTx(solanaConnection, newWallet, baseMint, quoteMint, buyAmount, POOL_ID)
-    } else {
+    } else if (SWAP_ROUTING == "JUPITER") {
       buyTx = await getBuyTxWithJupiter(newWallet, baseMint, buyAmount)
+    } else if (SWAP_ROUTING == "METEORA") {
+      const buyTxHash = await swapOnMeteora(solanaConnection, newWallet, buyAmount, true);
+      if (buyTxHash) return `https://solscan.io/tx/${buyTxHash}`;
+      else return null;
     }
     if (buyTx == null) {
       console.log(`Error getting buy transaction`)
@@ -357,9 +362,9 @@ const buy = async (newWallet: Keypair, baseMint: PublicKey, buyAmount: number) =
       }
       const tokenBalance = (tokenBalInfo.value.uiAmount)?.toFixed(2)
 
-//       sendMessage(`🎉 ${WISH_WORD} ${obfuscateString((newWallet.publicKey).toString())}
-// 💵 Spent: ${(buyAmount / 10 ** 9).toFixed(4)} sol ($${(buyAmount * curSolPrice / 10 ** 9).toFixed(3)})
-// 💎 Got: ${tokenBalance} ${TOKEN_NAME}`)
+      //       sendMessage(`🎉 ${WISH_WORD} ${obfuscateString((newWallet.publicKey).toString())}
+      // 💵 Spent: ${(buyAmount / 10 ** 9).toFixed(4)} sol ($${(buyAmount * curSolPrice / 10 ** 9).toFixed(3)})
+      // 💎 Got: ${tokenBalance} ${TOKEN_NAME}`)
     }
 
     return tokenBuyTx
@@ -393,8 +398,12 @@ const sell = async (baseMint: PublicKey, wallet: Keypair) => {
       let sellTx
       if (SWAP_ROUTING == "RAYDIUM") {
         sellTx = await getSellTx(solanaConnection, wallet, baseMint, quoteMint, sellAmount, POOL_ID)
-      } else {
+      } else if (SWAP_ROUTING == "JUPITER") {
         sellTx = await getSellTxWithJupiter(wallet, baseMint, sellAmount.toString())
+      } else if (SWAP_ROUTING == "METEORA") {
+        const sellTxHash = await swapOnMeteora(solanaConnection, wallet, sellAmount, false);
+        if (sellTxHash) return `https://solscan.io/tx/${sellTxHash}`
+        else return null;
       }
 
       if (sellTx == null) {
@@ -410,11 +419,11 @@ const sell = async (baseMint: PublicKey, wallet: Keypair) => {
       const afterBalance = await solanaConnection.getBalance(wallet.publicKey)
       const diffBalance = afterBalance - beforeBalance
 
-//       if (tokenSellTx) {
-//         sendMessage(`🎉 ${WISH_WORD} ${obfuscateString((wallet.publicKey).toString())}
-// 💵 Spent: ${(sellAmount / 10 ** 9).toFixed(2)} ${TOKEN_NAME}
-// 💎 Got: ${(diffBalance / 10 ** 9).toFixed(4)} sol ($${(diffBalance * curSolPrice / 10 ** 9).toFixed(3)})`)
-//       }
+      //       if (tokenSellTx) {
+      //         sendMessage(`🎉 ${WISH_WORD} ${obfuscateString((wallet.publicKey).toString())}
+      // 💵 Spent: ${(sellAmount / 10 ** 9).toFixed(2)} ${TOKEN_NAME}
+      // 💎 Got: ${(diffBalance / 10 ** 9).toFixed(4)} sol ($${(diffBalance * curSolPrice / 10 ** 9).toFixed(3)})`)
+      //       }
 
       return tokenSellTx
     } catch (error) {

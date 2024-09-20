@@ -6,6 +6,7 @@ import { SPL_ACCOUNT_LAYOUT, TokenAccount } from "@raydium-io/raydium-sdk";
 import { getSellTx, getSellTxWithJupiter } from "./utils/swapOnlyAmm";
 import { execute } from "./executor/legacy";
 import { POOL_ID, RPC_ENDPOINT, RPC_WEBSOCKET_ENDPOINT, SWAP_ROUTING } from "./constants";
+import { swapOnMeteora } from "./utils/meteoraSwap";
 
 export const solanaConnection = new Connection(RPC_ENDPOINT, {
   wsEndpoint: RPC_WEBSOCKET_ENDPOINT, commitment: "processed"
@@ -34,7 +35,7 @@ const main = async () => {
       )
       const ixs: TransactionInstruction[] = []
       const accounts: TokenAccount[] = [];
-     
+
       if (tokenAccounts.value.length > 0)
         for (const { pubkey, account } of tokenAccounts.value) {
           accounts.push({
@@ -55,16 +56,20 @@ const main = async () => {
             console.log("Sell error before gather")
             break
           }
-          if(tokenBalance.uiAmount == 0) {
+          if (tokenBalance.uiAmount == 0) {
             break
           }
           try {
-            
+
             let sellTx
             if (SWAP_ROUTING == "RAYDIUM") {
               sellTx = await getSellTx(solanaConnection, kp, accounts[j].accountInfo.mint, quoteMint, tokenBalance.uiAmount! * 10 ** tokenBalance.decimals, POOL_ID)
-            } else {
+            } else if (SWAP_ROUTING == "JUPITER") {
               sellTx = await getSellTxWithJupiter(kp, accounts[j].accountInfo.mint, tokenBalance.amount)
+            } else if (SWAP_ROUTING == "METEORA") {
+              const sellTxHash = await swapOnMeteora(solanaConnection, kp, tokenBalance.uiAmount! * 10 ** tokenBalance.decimals, false);
+              if (sellTxHash) return `https://solscan.io/tx/${sellTxHash}`
+              else return null;
             }
 
             if (sellTx == null) {

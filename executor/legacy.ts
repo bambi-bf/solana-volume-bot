@@ -22,8 +22,8 @@ export const execute = async (transaction: VersionedTransaction, latestBlockhash
       blockhash: latestBlockhash.blockhash,
     }
   );
-
   if (confirmation.value.err) {
+    console.log(confirmation.value.err);
     console.log("Confirmtaion error")
     return ""
   } else {
