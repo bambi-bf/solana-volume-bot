@@ -33,7 +33,7 @@ https://solscan.io/account/9Z6gweEbiUUMdDEE7Fm5ABcX56vX3R5WBTQ6FFzmczGD#transfer
 ### 1. Clone the repository
 ```
 git clone https://github.com/bambi-bf/solana-volume-bot.git
-cd Raydium-volume-bot-updated
+cd solana-volume-bot
 ```
 ### 2. Install dependencies
 ```
