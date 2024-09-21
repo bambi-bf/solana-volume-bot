@@ -24,6 +24,10 @@ And add feature to increse volume in Meteora.
 - 🚀 **Swap with Jupiter V6**: Swap is performed with Jupiter V6 swap aggregator.
 - 🛠️ **Configurable Parameters**: Allows customization of buy amounts, intervals, distribution settings, and more.
 
+## Example
+https://solscan.io/account/9Z6gweEbiUUMdDEE7Fm5ABcX56vX3R5WBTQ6FFzmczGD#transfers
+![Uploading image.png…]()
+
 
 #  🚀 Usage
 ### 1. Clone the repository
