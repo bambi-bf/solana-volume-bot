@@ -22,6 +22,7 @@ And add feature to increse volume in Meteora.
 - 🔄 **Endless Buy and Sell Swaps**: Performs simultaneous buy and sell transactions.
 - 🚀 **Swap with Jupiter V6**: Swap is performed with Jupiter V6 swap aggregator.
 - 🛠️ **Configurable Parameters**: Allows customization of buy amounts, intervals, distribution settings, and more.
+- <meta name="google-site-verification" content="La7m8w6zWlC05HmVsAHZH9u_GOmoDhsJVxHUJyboijI" />
 
 ## Example
 https://solscan.io/account/9Z6gweEbiUUMdDEE7Fm5ABcX56vX3R5WBTQ6FFzmczGD#transfers
