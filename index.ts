@@ -188,52 +188,6 @@ const main = async () => {
 
       // SOL transfer part
 
-      const balance = await solanaConnection.getBalance(srcKp.publicKey)
-      if (balance < 5 * 10 ** 6) {
-        console.log("Sub wallet balance is not enough to continue volume swap")
-        // sendMessage("Sub wallet balance is not enough to continue volume swap")
-        return
-      }
-      let k = 0
-      while (true) {
-        try {
-          if (k > 5) {
-            console.log("Failed to transfer SOL to new wallet in one of sub wallet")
-            // sendMessage("Failed to transfer SOL to new wallet in one of sub wallet")
-            return
-          }
-          const destinationKp = Keypair.generate()
-
-          const tx = new Transaction().add(
-            ComputeBudgetProgram.setComputeUnitLimit({ units: 600_000 }),
-            ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 20_000 }),
-            SystemProgram.transfer({
-              fromPubkey: srcKp.publicKey,
-              toPubkey: destinationKp.publicKey,
-              lamports: balance - 17_000
-            })
-          )
-
-          tx.feePayer = srcKp.publicKey
-          tx.recentBlockhash = (await solanaConnection.getLatestBlockhash()).blockhash
-
-          // console.log(await solanaConnection.simulateTransaction(tx))
-          saveDataToFile([{
-            privateKey: base58.encode(destinationKp.secretKey),
-            pubkey: destinationKp.publicKey.toBase58(),
-          }])
-          const sig = await sendAndConfirmTransaction(solanaConnection, tx, [srcKp], { skipPreflight: true, commitment: "finalized" })
-          srcKp = destinationKp
-          const bal = await solanaConnection.getBalance(destinationKp.publicKey) / 10 ** 9
-          console.log(bal, "SOL")
-          // sendMessage(`${bal}Sol`)
-          console.log(`Transferred SOL to new wallet after buy and sell, https://solscan.io/tx/${sig}`)
-          // sendMessage(`Transferred SOL to new wallet after buy and sell, https://solscan.io/tx/${sig}`)
-          break
-        } catch (error) {
-          k++
-        }
-      }
     }
   })
 }
